@@ -11,5 +11,5 @@ def loop(window):
         clock.tick(Game.fps)
         Game.check_quit()  # Checks if game is being quit, will close game if true.
         window.fill(Game.color)
-        Gui.rectangle(window)
+        Gui.build(window, outline_width=2)
         pygame.display.flip()
