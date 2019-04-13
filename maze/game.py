@@ -3,10 +3,9 @@ import sys
 
 
 class Game:
-    width = 360  # Width of screen
-    height = int(width * 16/9)  # Height of screen
-    boundary = width / 18  # Margins of screen
+    side = 600  # Side length of screen
     fps = 60  # Refresh rate of game
+    font = "freesansbold.ttf"  # Default font
 
     @staticmethod
     def check_quit():  # Checks if the game should be closed due to input
