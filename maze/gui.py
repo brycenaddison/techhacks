@@ -5,29 +5,6 @@ from maze.game import Game
 class Gui:
 
     @staticmethod
-    def build(window, outline_width=1):
-        __class__.rectangle(window,
-                            width=Game.side*3/4,
-                            height=Game.side/8,
-                            x=Game.side/8,
-                            y=Game.side/8,
-                            outline_width=outline_width)
-        __class__.rectangle(window,
-                            width=Game.side*3/4,
-                            height=Game.side/2+outline_width*2,
-                            x=Game.side/8,
-                            y=Game.side/4-outline_width,
-                            outline_width=outline_width)
-        __class__.rectangle(window,
-                            width=Game.side*3/4,
-                            height=Game.side/8,
-                            x=Game.side/8,
-                            y=Game.side*3/4,
-                            outline_width=outline_width
-                            )
-
-
-    @staticmethod
     def rectangle(window,
                   width=Game.side/2,
                   height=Game.side/2,
