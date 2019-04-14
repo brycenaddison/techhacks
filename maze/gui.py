@@ -1,5 +1,6 @@
 import pygame
 from maze.game import Game
+from maze.text import Text
 
 
 class Gui:
@@ -11,11 +12,35 @@ class Gui:
                   x=0,
                   y=0,
                   color=(0, 0, 0),
+                  hover_color=None,
+                  clicked=None,
+                  args=(),
                   outline=True,
                   outline_width=10,
-                  inner_box_color=Game.color):
+                  inner_box_color=Game.color,
+                  message=None,
+                  size_ratio=7/8,
+                  font_face=Game.font,
+                  font_color=(255, 255, 255)
+                  ):
         surface = pygame.Surface((int(width), int(height)))
-        surface.fill(color)
+        if hover_color is not None and \
+                x <= pygame.mouse.get_pos()[0] <= x + width and \
+                y <= pygame.mouse.get_pos()[1] <= y + height:
+            surface.fill(hover_color)
+        else:
+            surface.fill(color)
+        if clicked is not None and pygame.mouse.get_pressed()[0] == 1 and \
+                x <= pygame.mouse.get_pos()[0] <= x + width and \
+                y <= pygame.mouse.get_pos()[1] <= y + height:
+            clicked(*args)
+        if message is not None:
+            Text.display(surface, message,
+                         font_size=height*size_ratio,
+                         font_face=font_face,
+                         color=font_color,
+                         center_x=width/2+0.5,
+                         center_y=height/2+0.5)
         if outline:
             if outline_width * 2 >= height:
                 outline_width = height / 2

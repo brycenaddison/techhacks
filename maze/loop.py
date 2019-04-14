@@ -24,7 +24,7 @@ def build_loop(window):
         # Sets background color for canvas
         canvas.fill()
         # Builds GUI
-        build(window, "Build Phase", outline_width=5)
+        build(window, "Build Phase", canvas, outline_width=5)
         # Calls events
         for event in pygame.event.get():
             # Closes program is quit is called

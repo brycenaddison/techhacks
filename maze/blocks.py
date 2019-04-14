@@ -2,8 +2,10 @@ import pygame
 from pygame.locals import *
 from maze.game import Game
 
+
 class Block(pygame.sprite.Sprite):
-    def __init__(self, coords, width=5, color=(0,0,0)):
+    # noinspection PyShadowingNames
+    def __init__(self, coords, width=5, color=(0, 0, 0)):
         pygame.sprite.Sprite.__init__(self)
         self.coords = coords
         self.width = width
@@ -17,6 +19,7 @@ class Block(pygame.sprite.Sprite):
         return self.coords
 
 
+# noinspection PyShadowingNames,PyShadowingNames,PyShadowingNames
 class Canvas:
     def __init__(self, sprite_group,
                  width=Game.side,
@@ -34,6 +37,9 @@ class Canvas:
         self.rect.x = int(x)
         self.rect.y = int(y)
 
+    def clear(self):  # Clears all points
+        self.blocks = []
+        self.sprite_group.empty()
     def mouse_pos(self):  # Returns altered mouse pos based on canvas location to prevent offset
         mouse_pos = pygame.mouse.get_pos()
         mouse_pos = (int(mouse_pos[0] - self.rect.x), int(mouse_pos[1] - self.rect.y))
@@ -64,15 +70,15 @@ class Canvas:
     @staticmethod
     def min_max(a, b):  # Returns the smaller and larger value of two given values
         if a < b:
-            min = a
-            max = b
+            small = a
+            large = b
         else:
-            min = b
-            max = a
-        return min, max
+            small = b
+            large = a
+        return small, large
 
     @staticmethod
-    def line(start_point, end_point): # Generates a list of tuples of coordinates of a line between two points
+    def line(start_point, end_point):  # Generates a list of tuples of coordinates of a line between two points
         # Creates aliases for point coordinates
         x1 = start_point[0]
         x2 = end_point[0]
@@ -86,22 +92,22 @@ class Canvas:
             return points
         # Avoids divide by 0 for veritcal lines, returns vertical line of points
         if x1 == x2:
-            min, max = Canvas.min_max(y1, y2)
-            for y in range(min, max):
+            low, hi = Canvas.min_max(y1, y2)
+            for y in range(low, hi):
                 points.append((x1, y))
         # Creates line by iterating through x plane if slope is less than or equal to 1
         elif abs((y1 - y2) / (x1 - x2)) <= 1:
-            def f(x):
-                return ((y1 - y2) / (x1 - x2)) * (x - x1) + y1
-            min, max = Canvas.min_max(x1, x2)
-            for x in range(min, max):
+            def f(var):
+                return ((y1 - y2) / (x1 - x2)) * (var - x1) + y1
+            low, hi = Canvas.min_max(x1, x2)
+            for x in range(low, hi):
                 points.append((x, f(x)))
         # Creates line by iterating through y plane is slope is greater than 1
         else:
-            def f(x):
-                return ((x1 - x2) / (y1 - y2)) * (x - y1) + x1
-            min, max = Canvas.min_max(y1, y2)
-            for y in range(min, max):
+            def f(var):
+                return ((x1 - x2) / (y1 - y2)) * (var - y1) + x1
+            low, hi = Canvas.min_max(y1, y2)
+            for y in range(low, hi):
                 points.append((f(y), y))
         # Returns list of tuples with coordinates for points to create
         return points
