@@ -10,6 +10,11 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.7'
+    architecture: 'x64'
+
 - script: echo Starting Azure build...
   displayName: 'Run a one-line script'
 
@@ -19,8 +24,6 @@ steps:
   displayName: 'Run a multi-line script'
 
 - script: |
-    python --version
-    python3.7 --version
     python -m pip install --upgrade pip pipenv
     python -m pipenv install --dev
     python -m pipenv run lint
