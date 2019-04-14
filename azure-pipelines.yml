@@ -20,7 +20,7 @@ steps:
 
 - script: |
     python -m pip install --upgrade pip pipenv
-    pipenv install --dev
-    pipenv run lint
+    python -m pipenv install --dev
+    python -m pipenv run lint
   displayName: 'Install pipenv and dependencies and run lint'
 
