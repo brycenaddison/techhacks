@@ -1,0 +1,6 @@
+#input variables
+
+distanceToLineN =
+distanceToLineE = # These values will be given from the main python class.
+distanceToLineS =
+distanceToLineW =
