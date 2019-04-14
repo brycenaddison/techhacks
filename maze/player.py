@@ -67,10 +67,6 @@ class Player(pygame.sprite.Sprite):
 
 		return True
 
-	def update(self):
-		if not self.move(self.direction):
-			self.direction = self.direction + 1
-			if self.direction > 3:
-				self.direction = 0
+
 
 

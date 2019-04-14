@@ -42,8 +42,8 @@ class Canvas:
         self.player_group.add(player)
         return player
 
-    def update_player(self):
-        self.player.update()
+    def move_player(self, direction):
+        return self.player.move(direction)
 
     def create_dummy(self):
         player = Player(0, self.height / 2 - self.height / 32, self.width, self.height, self.player_group,
