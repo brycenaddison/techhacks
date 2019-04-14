@@ -1,8 +1,11 @@
 import pygame
 
+
 class Box(pygame.sprite.Sprite):
-	def __init__(self, x, y, canvas_width, canvas_height, player_group, block_group,
-				 width=10, height=10, color=(0, 0, 0)):
+	def __init__(
+			self, x, y, canvas_width, canvas_height, player_group, block_group, width=10, height=10,
+			color=(0, 0, 0)
+		):
 		pygame.sprite.Sprite.__init__(self)
 		self.width = width
 		self.height = height
@@ -20,8 +23,10 @@ class Box(pygame.sprite.Sprite):
 
 
 class Player(Box):
-	def __init__(self, x, y, canvas_width, canvas_height, player_group, block_group,
-				 width=10, height=10, color=(0, 0, 0)):
+	def __init__(
+			self, x, y, canvas_width, canvas_height, player_group, block_group,
+			width=10, height=10, color=(0, 0, 0)
+		):
 		super().__init__(x, y, canvas_width, canvas_height, player_group, block_group, width, height, color)
 
 	def pos(self):

@@ -5,13 +5,13 @@ from maze.player import Player, Box
 
 
 class Block(pygame.sprite.Sprite):
-    def __init__(self, coords, width=5, color=(0, 0, 0)):
+    def __init__(self, coords, width=5, rgb=(0, 0, 0)):
         pygame.sprite.Sprite.__init__(self)
         self.coords = coords
         self.width = width
-        self.color = color
+        self.color = rgb
         self.image = pygame.Surface((width, width))
-        self.image.fill(color)
+        self.image.fill(rgb)
         self.rect = self.image.get_rect()
         self.rect.center = coords
 
@@ -40,7 +40,7 @@ class Canvas:
 
     def create_player(self):
         player = Player(0, self.height/2-self.height/32, self.width, self.height, self.player_group,
-                             self.block_group, width=self.height/16, height=self.height/16, color=(0, 0, 255))
+                        self.block_group, width=self.height/16, height=self.height/16, color=(0, 0, 255))
         self.player_group.add(player)
         return player
 
@@ -49,14 +49,14 @@ class Canvas:
 
     def create_dummy(self):
         player = Player(0, self.height / 2 - self.height / 32, self.width, self.height, self.player_group,
-                             self.block_group, width=self.height / 16, height=self.height / 16, color=(100, 100, 100))
+                        self.block_group, width=self.height / 16, height=self.height / 16, color=(100, 100, 100))
         self.player_group.add(player)
         return player
 
     def create_goal(self):
         goal = Box(self.width - self.height / 16 + 1, self.height / 2 - self.height / 32, self.width, self.height,
-                      self.player_group,
-                      self.block_group, width=self.height / 16, height=self.height / 16, color=(0, 255, 0))
+                   self.player_group,
+                   self.block_group, width=self.height / 16, height=self.height / 16, color=(0, 255, 0))
         self.goal_group.add(goal)
         return goal
 
@@ -105,6 +105,10 @@ class Canvas:
         mouse_pos = (int(mouse_pos[0] - self.rect.x), int(mouse_pos[1] - self.rect.y))
         return mouse_pos
 
+    def hit_detect(self):
+        if len(pygame.sprite.groupcollide(self.player_group, self.goal_group, False, False)) != 0:
+            self.stop()
+
     def draw(self, window):  # Draws objects on canvas surface
         self.block_group.draw(self.window)
         self.goal_group.draw(self.window)
@@ -112,8 +116,8 @@ class Canvas:
         self.preview_line()
         window.blit(self.window, self.rect)
 
-    def fill(self, color=Game.color):
-        self.window.fill(color)
+    def fill(self, rgb=Game.color):
+        self.window.fill(rgb)
 
     def surface(self):  # Returns canvas surface
         return self.window
@@ -191,9 +195,9 @@ class Canvas:
             # Resets the line
             self.start_point = None
 
-    def preview_line(self, color=(255, 0, 0)):
+    def preview_line(self, rgb=(255, 0, 0)):
         if self.start_point is not None:
-            pygame.draw.aaline(self.window, color, self.start_point, self.mouse_pos())
+            pygame.draw.aaline(self.window, rgb, self.start_point, self.mouse_pos())
 
     def create_block(self, point):  # Creates a Block object with given coordinates and adds it to sprite group
         if self.point_is_valid(point) and not self.block_at_pos(point):

@@ -1,6 +1,3 @@
-import pygame
-
-
 class Game:
     side = 600  # Side length of screen
     fps = 60  # Refresh rate of game

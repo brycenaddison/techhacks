@@ -2,8 +2,6 @@ import pygame
 from maze.game import Game
 from maze.interface import build
 from maze.blocks import Canvas
-from maze.AI import Ai
-from threading import Thread
 import sys
 
 clock = pygame.time.Clock()
@@ -50,9 +48,6 @@ def build_loop(window):
 
 
 def run_loop(window, canvas):
-    ai = Ai(canvas)
-    thread = Thread(target=ai.tick)
-    thread.start()
     while True:
         # Sets max FPS
         clock.tick(Game.fps)
@@ -60,6 +55,8 @@ def run_loop(window, canvas):
         window.fill(Game.color)
         # Sets background color for canvas
         canvas.fill()
+        # Checks if player hit goal
+        canvas.hit_detect()
         # Calls events
         clicked = False
         for event in pygame.event.get():
@@ -75,8 +72,17 @@ def run_loop(window, canvas):
         if key[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
+        # Player interpreter instead of failed AI
+        if key[pygame.K_LEFT]:
+            canvas.move_player(2)
+        if key[pygame.K_RIGHT]:
+            canvas.move_player(0)
+        if key[pygame.K_UP]:
+            canvas.move_player(3)
+        if key[pygame.K_DOWN]:
+            canvas.move_player(1)
         # Builds GUI
-        build(window, "Running", ai.gui(), canvas, clicked=clicked, outline_width=5, running=True)
+        build(window, "Running", "No AI Implemented D:", canvas, clicked=clicked, outline_width=5, running=True)
         # Draws canvas to window
         canvas.draw(window)
         # Updates display
