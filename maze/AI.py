@@ -1,7 +1,7 @@
 #input variables
 import random
 distanceToLineN =0
-distanceToLineE =0 # These values will be given from the main python class.
+distanceToLineE =0 # BRYSENS DATA FROM THE MAIN PYGAME CLASS WILL FILL THIS IN
 distanceToLineS =0
 distanceToLineW =0
 weightOfN=0.25
@@ -12,11 +12,22 @@ rewardforNorth=0
 rewardforEast=0
 rewardforSouth=0
 rewardforWest=0
-hasCollided= False
+hasCollided= False # BRYSENS DATA WILL FILL THIS STUFF IN
 numbatchsize=0
 totalbatchsize=10
 numTrains=0
 totalnumTrains= 10
+MovementDiff=1
+numMovesN=0
+numMovesE=0
+numMovesS=0
+numMovesW=0
+AverageNorthReward=0
+AverageEastReward=0
+AverageSouthReward=0
+AverageWestReward=0
+MaxNumofMovements=26
+movementCounter=0
 
 
 
@@ -43,83 +54,174 @@ SECOND HALF OF TRANING should rely more the reward system/ neural network we cre
 
 
 while(numTrains < totalnumTrains+1):
-     numTrains=numTrains+1
+    rewardforNorth=0
+    rewardforEast=0
+    rewardforSouth=0
+    rewardforWest=0
+    numTrains=numTrains+1
     print("Gen #"+str(numTrains))
     numbatchsize=1
     while((numbatchsize<totalbatchsize+1) or #PlayerObject hits a big ass wall or reaches the goal):
         numbatchsize=numbatchsize+1
         print("PlayerObject #"+str(numbatchsize))
-        typeOfAction=random.randint(1,10)  #5+randomovement,5+rewardmovement
-        if(typeOfAction>5): #Actions based on pure and utter randomness(Meant for exploration )
-            CRA=random.randint(1,4)
-            if(CRA==1):
-                #Move N
-                #Update state
-                #Add award
-                print("North")
-            if(CRA==2):
-                #Move East
-                #Update State
-                #Add award
-                print("East")
-            if(CRA==3):
-                #Move South
-                #Update State
-                #Add award+10
-                print("South")
-            if(CRA==4):
-                #Move West
-                #Update state
-                #Add award
-                print("West")
-        if(typeOfAction<5):  #Actions based on Weighting and Rewards( the actual neural network)
+        while(movementCounter<MaxNumofMovements):
+            movementCounter=movementCounter+1
 
-            NorthWeight=weightOfN*100
-            SouthWeight=weightOfS*100
-            EastWeight=weightOfE*100
-            WestWeight=weightOfW*100
+            typeOfAction=random.randint(1,100)  #5+randomovement,5+rewardmovement
+
+            if(typeOfAction>MovementDiff+(5*numTrains)): #Actions based on pure and utter randomness(Meant for exploration )
+                CRA=random.randint(1,4)
+                if(CRA==1):
+                    #Move N
+                    numMovesN=numMovesN+1
+                    CreateRewardsN()
+                    print("North")
+                if(CRA==2):
+                    #Move East
+                    numMovesE=numMovesE+1
+                    CreateRewardsE()
+                    print("East")
+                if(CRA==3):
+                    #Move South
+                    numMovesS=numMovesS+1
+                    CreateRewardsS()
+                    print("South")
+                if(CRA==4):
+                    #Move West
+                    numMovesW=numMovesW+1
+                    CreateRewardsW()
+                    print("West")
+            else:  #Actions based on Weighting and Rewards( the actual neural network)
+
+                NorthWeight=weightOfN*100
+                SouthWeight=weightOfS*100
+                EastWeight=weightOfE*100
+                WestWeight=weightOfW*100
 
 
-            RA=random.randint(1,100)
-            if(RA>0 and RA<=NorthWeight):
-                #Move North
-                #Add award
-            if(RA>NorthWeight and RA<=EastWeight):
-                #Move East
-                #Add award+10
-            if(RA>EastWeight and RA<=SouthWeight):
-                #Move South
-                #Add award
-            if(RA>SouthWeight and RA<=100):
-                #Move West
-                #Add award
+                RA=random.randint(1,100)
+                if(RA>0 and RA<=NorthWeight):
+                    #Move North
+                    numMovesN=numMovesN+1
+                    CreateRewardsN()
+                if(RA>NorthWeight and RA<=EastWeight):
+                    #Move East
+                    numMovesE=numMovesE+1
+                    CreateRewardsE()
+                if(RA>EastWeight and RA<=SouthWeight):
+                    #Move South
+                    numMovesS=numMovesS+1
+                    CreateRewardsS()
+                if(RA>SouthWeight and RA<=100):
+                    numMovesW=numMovesW+1
+                    #Move West
+                    CreateRewardsW()
+
+    AdjustWeights()
+
+
+
+def AdjustWeights():
+    AverageNorthReward = (rewardforNorth/numMovesN)
+    AverageEastReward  = (rewardforEast/numMovesE)
+    AverageSouthReward = (rewardforSouth/numMovesS)
+    AverageWestReward  = (rewardforWest/numMovesW)
+
+    if((AverageNorthReward)>10):
+        weightOfN=weightOfN+0.12
+        weightOfE=weightOfE-0.04
+        weightOfS=weightOfS-0.04
+        weightOfW=weightOfW-0.04
+    elif((AverageNorthReward)>5):
+        weightOfN=weightOfN+0.06
+        weightOfE=weightOfE-0.02
+        weightOfS=weightOfS-0.02
+        weightOfW=weightOfW-0.02
+    elif((AverageNorthReward)<0):
+        weightOfN=weightOfN-0.21
+        weightOfE=weightOfE+0.07
+        weightOfS=weightOfS+0.07
+        weightOfW=weightOfW+0.07
+
+    if((AverageEastReward)>10):
+        weightOfN=weightOfN-0.04
+        weightOfE=weightOfE+0.12
+        weightOfS=weightOfS-0.04
+        weightOfW=weightOfW-0.04
+    elif((AverageEastReward)>5):
+        weightOfN=weightOfN-0.02
+        weightOfE=weightOfE+0.06
+        weightOfS=weightOfS-0.02
+        weightOfW=weightOfW-0.02
+    elif((AverageEastReward)<0):
+        weightOfN=weightOfN+0.07
+        weightOfE=weightOfE-0.21
+        weightOfS=weightOfS+0.07
+        weightOfW=weightOfW+0.07
+
+    if((AverageSouthReward)>10):
+        weightOfN=weightOfN-0.04
+        weightOfE=weightOfE-0.04
+        weightOfS=weightOfS+0.12
+        weightOfW=weightOfW-0.04
+    elif((AverageSouthReward)>5):
+        weightOfN=weightOfN-0.02
+        weightOfE=weightOfE-0.02
+        weightOfS=weightOfS+0.06
+        weightOfW=weightOfW-0.02
+    elif((AverageSouthReward)<0):
+        weightOfN=weightOfN+0.07
+        weightOfE=weightOfE+0.07
+        weightOfS=weightOfS-0.21
+        weightOfW=weightOfW+0.07
+
+    if((AverageWestReward)>10):
+        weightOfN=weightOfN-0.04
+        weightOfE=weightOfE-0.04
+        weightOfS=weightOfS-0.04
+        weightOfW=weightOfW+0.12
+    elif((AverageSouthReward)>5):
+        weightOfN=weightOfN-0.02
+        weightOfE=weightOfE-0.02
+        weightOfS=weightOfS-0.02
+        weightOfW=weightOfW+0.06
+    elif((AverageSouthReward)<0):
+        weightOfN=weightOfN+0.07
+        weightOfE=weightOfE+0.07
+        weightOfS=weightOfS+0.07
+        weightOfW=weightOfW-0.21
+
+
+
+
+
 
 def CreateRewardsN():
             if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
-                rewardforNorth+=10
+                rewardforNorth=rewardforNorth+10
             elif(hasCollided):
-                rewardforNorth-=200
+                rewardforNorth=rewardforNorth-200
             else:
-                rewardforNorth+=20
+                rewardforNorth=rewardforNorth+20
 def CreateRewardsE():
             if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
-                rewardforNorth+=10
+                rewardforEast=rewardforEast+15
             elif(hasCollided):
-                rewardforNorth-=200
+                rewardforEast=rewardforEast-200
             else:
-                rewardforNorth+=20
+                rewardforEast=rewardforEast+30
 def CreateRewardsS():
             if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
-                rewardforNorth+=10
+                rewardforSouth=rewardforSouth+10
             elif(hasCollided):
-                rewardforNorth-=200
+                rewardforSouth=rewardforSouth-200
             else:
-                rewardforNorth+=20
+                rewardforSouth=rewardforSouth+20
 
 def CreateRewardsW():
             if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
-                rewardforNorth+=10
+                rewardforWest=rewardforWest+10
             elif(hasCollided):
-                rewardforNorth-=200
+                rewardforWest=rewardforWest-200
             else:
-                rewardforNorth+=20
+                rewardforWest=rewardforWest+20
