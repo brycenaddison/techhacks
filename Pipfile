@@ -8,6 +8,7 @@ flake8 = "*"
 
 [packages]
 pygame = "*"
+maze = "*"
 
 [requires]
 python_version = "3.7"
