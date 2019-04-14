@@ -10,9 +10,9 @@ weightOfS=0.25
 weightofW=0.25
 hasCollided= False
 numbatchsize=0
-totalbatchsize=2
+totalbatchsize=10
 numTrains=0
-totalnumTrains= 5
+totalnumTrains= 10
 
 
 
@@ -21,6 +21,7 @@ totalnumTrains= 5
 
 
 #CRA(Complete Random Action)
+#RA(Reward Action )
 
 
 #Over time the randomness will decrease
@@ -37,10 +38,11 @@ SECOND HALF OF TRANING should rely more the reward system/ neural network we cre
 
 
 
-while(numTrains < totalnumTrains):
+while(numTrains < totalnumTrains+1):
+     numTrains=numTrains+1
     print("Gen #"+str(numTrains))
     numbatchsize=1
-    while(numbatchsize<11):
+    while((numbatchsize<totalbatchsize+1) or #PlayerObject hits a big ass wall or reaches the goal):
         numbatchsize=numbatchsize+1
         print("PlayerObject #"+str(numbatchsize))
         typeOfAction=random.randint(1,10)  #5+randomovement,5+rewardmovement
@@ -48,39 +50,48 @@ while(numTrains < totalnumTrains):
             CRA=random.randint(1,4)
             if(CRA==1):
                 #Move N
+                #Update state
                 #Add award
                 print("North")
-            elif(CRA==2):
+            if(CRA==2):
                 #Move East
+                #Update State
                 #Add award
                 print("East")
-            elif(CRA==3):
+            if(CRA==3):
                 #Move South
-                #Add award
+                #Update State
+                #Add award+10
                 print("South")
-            elif(CRA==4):
+            if(CRA==4):
                 #Move West
+                #Update state
                 #Add award
                 print("West")
-    numTrains=numTrains+1
-        #if(typeOfAction<5)  #Actions based on Weighting and Rewards( the actual neural network)
+        if(typeOfAction<5):  #Actions based on Weighting and Rewards( the actual neural network)
 
-            #(Randominzation that incorportes the weights of the types of movement for reward system)
+            NorthWeight=weightOfN*100
+            SouthWeight=weightOfS*100
+            EastWeight=weightOfE*100
+            WestWeight=weightOfW*100
 
-            #for North
+
+            RA=random.randint(1,100)
+            if(RA>0 and RA<=NorthWeight):
                 #Move North
                 #Add award
-            #for East
+            if(RA>NorthWeight and RA<=0.50):
                 #Move East
-                #Add award
-            #for South
+                #Add award+10
+            if(RA>0.5 and RA<=0.75):
                 #Move South
                 #Add award
-            #for  West
+            if(RA>
                 #Move West
                 #Add award
 
-        #Some Static Method Header
+def CreateRewards():
+
 
             #if( (distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) <25):
                 #totalreward+=10
@@ -89,53 +100,6 @@ while(numTrains < totalnumTrains):
                 #End Singular Batch
             #else:
                 #totalreward=+20
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
