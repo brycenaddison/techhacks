@@ -16,11 +16,12 @@ class Block(pygame.sprite.Sprite):
         self.rect.center = coords
 
     def get_coords(self):
-        return self.coords
+        point = (int(self.coords[0]), int(self.coords[1]))
+        return point
 
 
 class Canvas:
-    def __init__(self, width=Game.side, height=Game.side, x=0, y=0, block_width=6):
+    def __init__(self, width=Game.side, height=Game.side, x=0, y=0, block_width=3):
         self.width = width
         self.height = height
         self.block_width = block_width
@@ -49,6 +50,26 @@ class Canvas:
                              self.block_group, width=self.height / 16, height=self.height / 16, color=(100, 100, 100))
         self.player_group.add(player)
         return player
+
+    def get_player_distances(self):
+        pos = self.player.pos()
+        xpos_dist = int(self.width - pos[0])
+        xneg_dist = int(pos[0])
+        ypos_dist = int(self.height - pos[1])
+        yneg_dist = int(pos[1])
+        for block in self.blocks:
+            bpos = block.get_coords()
+            if pos[0] == bpos[0]:
+                if bpos[1] > pos[1] and bpos[1] - pos[1] < ypos_dist:
+                    ypos_dist = bpos[1] - pos[1]
+                elif bpos[1] <= pos[1] and pos[1] - bpos[1] < yneg_dist:
+                    yneg_dist = pos[1] - bpos[1]
+            elif pos[1] == bpos[1]:
+                if bpos[0] > pos[0] and bpos[0] - pos[0] < xpos_dist:
+                    xpos_dist = bpos[0] - pos[0]
+                elif bpos[0] <= pos[0] and pos[0] - bpos[0] < xneg_dist:
+                    xneg_dist = pos[0] - bpos[0]
+        return xpos_dist, ypos_dist, xneg_dist, yneg_dist
 
     def run(self):  # Sets running to true
         self.start_point = None

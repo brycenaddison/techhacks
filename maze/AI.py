@@ -192,10 +192,6 @@ def AdjustWeights():
         weightOfW=weightOfW-0.21
 
 
-
-
-
-
 def CreateRewardsN():
             if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
                 rewardforNorth=rewardforNorth+10
@@ -225,3 +221,70 @@ def CreateRewardsW():
                 rewardforWest=rewardforWest-200
             else:
                 rewardforWest=rewardforWest+20
+
+
+while(numTrains < totalnumTrains+1):
+    rewardforNorth=0
+    rewardforEast=0
+    rewardforSouth=0
+    rewardforWest=0
+    numTrains=numTrains+1
+    print("Gen #"+str(numTrains))
+    numbatchsize=1
+    while((numbatchsize<totalbatchsize+1) or #PlayerObject hits a big ass wall or reaches the goal):
+        numbatchsize=numbatchsize+1
+        print("PlayerObject #"+str(numbatchsize))
+        while(movementCounter<MaxNumofMovements):
+            movementCounter=movementCounter+1
+
+            typeOfAction=random.randint(1,100)  #5+randomovement,5+rewardmovement
+
+            if(typeOfAction>MovementDiff+(5*numTrains)): #Actions based on pure and utter randomness(Meant for exploration )
+                CRA=random.randint(1,4)
+                if(CRA==1):
+                    #Move N
+                    numMovesN=numMovesN+1
+                    CreateRewardsN()
+                    print("North")
+                if(CRA==2):
+                    #Move East
+                    numMovesE=numMovesE+1
+                    CreateRewardsE()
+                    print("East")
+                if(CRA==3):
+                    #Move South
+                    numMovesS=numMovesS+1
+                    CreateRewardsS()
+                    print("South")
+                if(CRA==4):
+                    #Move West
+                    numMovesW=numMovesW+1
+                    CreateRewardsW()
+                    print("West")
+            else:  #Actions based on Weighting and Rewards( the actual neural network)
+
+                NorthWeight=weightOfN*100
+                SouthWeight=weightOfS*100
+                EastWeight=weightOfE*100
+                WestWeight=weightOfW*100
+
+
+                RA=random.randint(1,100)
+                if(RA>0 and RA<=NorthWeight):
+                    #Move North
+                    numMovesN=numMovesN+1
+                    CreateRewardsN()
+                if(RA>NorthWeight and RA<=EastWeight):
+                    #Move East
+                    numMovesE=numMovesE+1
+                    CreateRewardsE()
+                if(RA>EastWeight and RA<=SouthWeight):
+                    #Move South
+                    numMovesS=numMovesS+1
+                    CreateRewardsS()
+                if(RA>SouthWeight and RA<=100):
+                    numMovesW=numMovesW+1
+                    #Move West
+                    CreateRewardsW()
+
+    AdjustWeights()

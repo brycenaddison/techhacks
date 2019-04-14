@@ -19,6 +19,10 @@ class Player(pygame.sprite.Sprite):
 		self.tick = 0
 		self.direction = 0
 
+	def pos(self):
+		pos = (int(self.rect.x), int(self.rect.y))
+		return pos
+
 	def move(self, direction, dist=1):
 		if direction == 0:
 			if self.rect.x + dist + self.width > self.canvas_width:
