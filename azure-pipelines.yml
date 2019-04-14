@@ -10,7 +10,7 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: Starting Azure build...
+- script: echo Starting Azure build...
   displayName: 'Run a one-line script'
 
 - script: |
