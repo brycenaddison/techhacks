@@ -19,6 +19,8 @@ steps:
   displayName: 'Run a multi-line script'
 
 - script: |
+    python --version
+    python3.7 --version
     python -m pip install --upgrade pip pipenv
     python -m pipenv install --dev
     python -m pipenv run lint
