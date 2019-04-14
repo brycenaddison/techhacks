@@ -35,13 +35,6 @@ class Gui:
                 x <= pygame.mouse.get_pos()[0] <= x + width and \
                 y <= pygame.mouse.get_pos()[1] <= y + height:
             on_click(*args)
-        if message is not None:
-            Text.display(surface, message,
-                         font_size=height*size_ratio,
-                         font_face=font_face,
-                         color=font_color,
-                         center_x=width/2+0.5,
-                         center_y=height/2+0.5)
         if outline:
             if outline_width * 2 >= height:
                 outline_width = height / 2
@@ -50,6 +43,13 @@ class Gui:
             inner_surface = pygame.Surface((int(width-(outline_width*2)), int(height-(outline_width*2))))
             inner_surface.fill(inner_box_color)
             surface.blit(inner_surface, (outline_width, outline_width))
+        if message is not None:
+            Text.display(surface, message,
+                         font_size=height*size_ratio,
+                         font_face=font_face,
+                         color=font_color,
+                         center_x=width/2+0.5,
+                         center_y=height/2+0.5)
         rect = surface.get_rect()
         rect.x = int(x)
         rect.y = int(y)

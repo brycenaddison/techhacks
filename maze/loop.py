@@ -39,7 +39,7 @@ def build_loop(window):
             pygame.quit()
             sys.exit()
         # Builds GUI
-        build(window, "Build Phase", canvas, clicked=clicked, outline_width=5)
+        build(window, "Build Phase", "Not Running", canvas, clicked=clicked, outline_width=5)
         # Draws canvas to window
         canvas.draw(window)
         # Updates display
@@ -76,7 +76,7 @@ def run_loop(window, canvas):
             pygame.quit()
             sys.exit()
         # Builds GUI
-        build(window, "Running", canvas, clicked=clicked, outline_width=5, running=True)
+        build(window, "Running", ai.gui(), canvas, clicked=clicked, outline_width=5, running=True)
         # Draws canvas to window
         canvas.draw(window)
         # Updates display

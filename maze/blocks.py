@@ -54,9 +54,9 @@ class Canvas:
         return player
 
     def create_goal(self):
-        goal = Box(self.width - self.height / 16, self.height / 2 - self.height / 32, self.width, self.height,
+        goal = Box(self.width - self.height / 16 + 1, self.height / 2 - self.height / 32, self.width, self.height,
                       self.player_group,
-                      self.block_group, width=self.height / 16, height=self.height / 16, color=(255, 255, 255))
+                      self.block_group, width=self.height / 16, height=self.height / 16, color=(0, 255, 0))
         self.goal_group.add(goal)
         return goal
 

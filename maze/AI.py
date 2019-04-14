@@ -235,3 +235,7 @@ class Ai:
             self.reward_for_west = self.reward_for_west - 200
         else:
             self.reward_for_west = self.reward_for_west + 20
+
+    def gui(self):
+        return f"N: {self.average_reward_n} E: {self.average_reward_e} " \
+            f"S: {self.average_reward_s} W: {self.average_reward_w}"
