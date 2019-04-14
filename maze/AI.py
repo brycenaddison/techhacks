@@ -8,6 +8,10 @@ weightOfN=0.25
 weightOfE=0.25
 weightOfS=0.25
 weightofW=0.25
+rewardforNorth=0
+rewardforEast=0
+rewardforSouth=0
+rewardforWest=0
 hasCollided= False
 numbatchsize=0
 totalbatchsize=10
@@ -80,29 +84,42 @@ while(numTrains < totalnumTrains+1):
             if(RA>0 and RA<=NorthWeight):
                 #Move North
                 #Add award
-            if(RA>NorthWeight and RA<=0.50):
+            if(RA>NorthWeight and RA<=EastWeight):
                 #Move East
                 #Add award+10
-            if(RA>0.5 and RA<=0.75):
+            if(RA>EastWeight and RA<=SouthWeight):
                 #Move South
                 #Add award
-            if(RA>
+            if(RA>SouthWeight and RA<=100):
                 #Move West
                 #Add award
 
-def CreateRewards():
+def CreateRewardsN():
+            if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
+                rewardforNorth+=10
+            elif(hasCollided):
+                rewardforNorth-=200
+            else:
+                rewardforNorth+=20
+def CreateRewardsE():
+            if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
+                rewardforNorth+=10
+            elif(hasCollided):
+                rewardforNorth-=200
+            else:
+                rewardforNorth+=20
+def CreateRewardsS():
+            if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
+                rewardforNorth+=10
+            elif(hasCollided):
+                rewardforNorth-=200
+            else:
+                rewardforNorth+=20
 
-
-            #if( (distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) <25):
-                #totalreward+=10
-            #elif(hasCollided):
-                #totalreward-=500
-                #End Singular Batch
-            #else:
-                #totalreward=+20
-
-
-
-
-
-#if(distancetoLineE and distanceToLineN and  distanceToLineS and distanceToLineW<25 )
+def CreateRewardsW():
+            if((distancetoLineN or distanceToLineE or distanceToLineS or distanceToLineW) < 5):
+                rewardforNorth+=10
+            elif(hasCollided):
+                rewardforNorth-=200
+            else:
+                rewardforNorth+=20
