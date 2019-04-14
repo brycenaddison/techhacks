@@ -55,4 +55,3 @@ class Gui:
         rect.x = int(x)
         rect.y = int(y)
         window.blit(surface, rect)
-

@@ -11,4 +11,3 @@ if __name__ == "__main__":
     loop.build_loop(window)
     pygame.quit()
     quit()
-

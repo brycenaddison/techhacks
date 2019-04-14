@@ -72,5 +72,3 @@ def build(window, title, message, canvas, clicked=False, outline_width=1,
                       on_click=canvas.run,
                       outline=False,
                       message="Run")
-
-
