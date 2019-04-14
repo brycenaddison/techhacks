@@ -8,11 +8,8 @@ clock = pygame.time.Clock()
 
 
 def build_loop(window):
-    # Initializes the list of sprites
-    blocks = pygame.sprite.Group()
     # Initializes canvas, which holds all point values drawn
-    canvas = Canvas(blocks,
-                    width=Game.side * 3 / 4,
+    canvas = Canvas(width=Game.side * 3 / 4,
                     height=Game.side / 2,
                     x=Game.side / 8,
                     y=Game.side / 4)
@@ -23,14 +20,15 @@ def build_loop(window):
         window.fill(Game.color)
         # Sets background color for canvas
         canvas.fill()
-        # Builds GUI
-        build(window, "Build Phase", canvas, outline_width=5)
         # Calls events
+        clicked = False
         for event in pygame.event.get():
             # Closes program is quit is called
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                clicked = True
             # Passes events to canvas update, which checks for mouse inputs
             canvas.update(event)
         # Closes the game if the escape key is pressed
@@ -38,7 +36,47 @@ def build_loop(window):
         if key[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
+        # Builds GUI
+        build(window, "Build Phase", canvas, clicked=clicked, outline_width=5)
         # Draws canvas to window
         canvas.draw(window)
         # Updates display
         pygame.display.flip()
+        # Breaks loop if run button is clicked
+        if canvas.is_running():
+            run_loop(window, canvas)
+
+
+def run_loop(window, canvas):
+    while True:
+        # Sets max FPS
+        clock.tick(Game.fps)
+        # Sets background color
+        window.fill(Game.color)
+        # Sets background color for canvas
+        canvas.fill()
+        # Updates player logic
+        canvas.update_player()
+        # Calls events
+        clicked = False
+        for event in pygame.event.get():
+            # Closes program is quit is called
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                clicked = True
+        # Closes the game if the escape key is pressed
+        key = pygame.key.get_pressed()
+        if key[pygame.K_ESCAPE]:
+            pygame.quit()
+            sys.exit()
+        # Builds GUI
+        build(window, "Running", canvas, clicked=clicked, outline_width=5, running=True)
+        # Draws canvas to window
+        canvas.draw(window)
+        # Updates display
+        pygame.display.flip()
+        # Breaks running loop if cancel button is clicked
+        if not canvas.is_running():
+            break

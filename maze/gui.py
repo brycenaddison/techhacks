@@ -13,7 +13,8 @@ class Gui:
                   y=0,
                   color=(0, 0, 0),
                   hover_color=None,
-                  clicked=None,
+                  clicked=False,
+                  on_click=None,
                   args=(),
                   outline=True,
                   outline_width=10,
@@ -30,10 +31,10 @@ class Gui:
             surface.fill(hover_color)
         else:
             surface.fill(color)
-        if clicked is not None and pygame.mouse.get_pressed()[0] == 1 and \
+        if on_click is not None and clicked and \
                 x <= pygame.mouse.get_pos()[0] <= x + width and \
                 y <= pygame.mouse.get_pos()[1] <= y + height:
-            clicked(*args)
+            on_click(*args)
         if message is not None:
             Text.display(surface, message,
                          font_size=height*size_ratio,
