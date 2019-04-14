@@ -76,7 +76,6 @@ class Player(Box):
 
         if len(pygame.sprite.groupcollide(
                self.player_group, self.block_group,
-               self.player_group, self.block_group,
                False, False)
                ) != 0:
             self.rect.x = self.rect.x - x_dist
