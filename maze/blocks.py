@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from maze.game import Game
-from maze.player import Player
+from maze.player import Player, Box
 
 
 class Block(pygame.sprite.Sprite):
@@ -27,6 +27,7 @@ class Canvas:
         self.block_width = block_width
         self.block_group = pygame.sprite.Group()
         self.player_group = pygame.sprite.Group()
+        self.goal_group = pygame.sprite.Group()
         self.blocks = []
         self.running = False
         self.start_point = None
@@ -35,6 +36,7 @@ class Canvas:
         self.rect.x = int(x)
         self.rect.y = int(y)
         self.player = self.create_dummy()
+        self.goal = self.create_goal()
 
     def create_player(self):
         player = Player(0, self.height/2-self.height/32, self.width, self.height, self.player_group,
@@ -50,6 +52,13 @@ class Canvas:
                              self.block_group, width=self.height / 16, height=self.height / 16, color=(100, 100, 100))
         self.player_group.add(player)
         return player
+
+    def create_goal(self):
+        goal = Box(self.width - self.height / 16, self.height / 2 - self.height / 32, self.width, self.height,
+                      self.player_group,
+                      self.block_group, width=self.height / 16, height=self.height / 16, color=(255, 255, 255))
+        self.goal_group.add(goal)
+        return goal
 
     def get_player_distances(self):
         pos = self.player.pos()
@@ -98,6 +107,7 @@ class Canvas:
 
     def draw(self, window):  # Draws objects on canvas surface
         self.block_group.draw(self.window)
+        self.goal_group.draw(self.window)
         self.player_group.draw(self.window)
         self.preview_line()
         window.blit(self.window, self.rect)
@@ -192,4 +202,7 @@ class Canvas:
             self.block_group.add(block)
             if self.player is not None:
                 pygame.sprite.groupcollide(self.player_group, self.block_group, False, True)
+            if self.goal is not None:
+                pygame.sprite.groupcollide(self.goal_group, self.block_group, False, True)
+
         return False

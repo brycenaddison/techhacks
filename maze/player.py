@@ -1,7 +1,6 @@
 import pygame
 
-
-class Player(pygame.sprite.Sprite):
+class Box(pygame.sprite.Sprite):
 	def __init__(self, x, y, canvas_width, canvas_height, player_group, block_group,
 				 width=10, height=10, color=(0, 0, 0)):
 		pygame.sprite.Sprite.__init__(self)
@@ -18,6 +17,12 @@ class Player(pygame.sprite.Sprite):
 		self.rect.y = y
 		self.tick = 0
 		self.direction = 0
+
+
+class Player(Box):
+	def __init__(self, x, y, canvas_width, canvas_height, player_group, block_group,
+				 width=10, height=10, color=(0, 0, 0)):
+		super().__init__(x, y, canvas_width, canvas_height, player_group, block_group, width, height, color)
 
 	def pos(self):
 		pos = (int(self.rect.x), int(self.rect.y))

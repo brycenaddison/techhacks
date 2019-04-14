@@ -20,7 +20,7 @@ class Ai:
         self.num_batch_size = 0
         self.total_batch_size = 10
         self.num_trains = 0
-        self.total_num_trains = 10
+        self.total_num_trains = 100000
 
         self.movement_diff = 1
 
@@ -28,7 +28,7 @@ class Ai:
 
         self.average_reward_n, self.average_reward_e, self.average_reward_w, self.average_reward_s = (0, 0, 0, 0)
 
-        self.max_num_movements = 26
+        self.max_num_movements = 5000
         self.movement_counter = 0
 
     # CERTAIN COMMENTS IN CODE NEED TO BECOME ACTUAL METHODS OTHERWISE BIG BUST
@@ -52,11 +52,11 @@ class Ai:
     # training
 
     def move(self, direction):
-        if not self.canvas.move_player(self, direction):
+        if not self.canvas.move_player(direction):
             self.collided = True
 
     def tick(self):
-        while self.num_trains < self.total_num_trains + 1:
+        while self.num_trains < self.total_num_trains + 1 and self.canvas.is_running():
             self.reward_for_north = 0
             self.reward_for_east = 0
             self.reward_for_south = 0
@@ -64,38 +64,38 @@ class Ai:
             self.num_trains = self.num_trains + 1
             print(f"Gen #{self.num_trains}")
             self.num_batch_size = 1
-            while self.num_batch_size < self.total_batch_size + 1:
+            while self.num_batch_size < self.total_batch_size + 1 and self.canvas.is_running():
                 # PlayerObject hits a big ass wall or reaches the goal
                 self.num_batch_size = self.num_batch_size + 1
                 print(f"PlayerObject #{self.num_batch_size}")
-                while self.movement_counter < self.max_num_movements:
+                while self.movement_counter < self.max_num_movements and self.canvas.is_running():
                     self.movement_counter = self.movement_counter + 1
                     self.collided = False
                     type_of_action = random.randint(1, 100)  # 5+randomovement,5+rewardmovement
 
-                    if type_of_action > self.movement_diff + 5 * self.num_trains:
+                    if type_of_action > 50:
                         # Actions based on pure and utter randomness (Meant for exploration)
                         direction = random.randint(0, 3)
                         if direction == 0:
+                            print("Random Up")
                             self.move(3)
                             self.num_moves_n = self.num_moves_n + 1
                             self.create_rewards_n()
-                            print("North")
                         if direction == 1:
+                            print("Random Right")
                             self.move(0)
                             self.num_moves_e = self.num_moves_e + 1
                             self.create_rewards_e()
-                            print("East")
                         if direction == 2:
+                            print("Random Down")
                             self.move(1)
                             self.num_moves_s = self.num_moves_s + 1
                             self.create_rewards_s()
-                            print("South")
                         if direction == 3:
+                            print("Random Left")
                             self.move(2)
                             self.num_moves_w = self.num_moves_w + 1
                             self.create_rewards_w()
-                            print("West")
 
                     else:  # Actions based on Weighting and Rewards (the actual neural network)
 
@@ -106,18 +106,22 @@ class Ai:
 
                         v = random.randint(1, 100)
                         if v <= n_weight:
+                            print("Action Up")
                             self.move(3)
                             self.num_moves_n = self.num_moves_n + 1
                             self.create_rewards_n()
                         elif v <= e_weight:
+                            print("Action Right")
                             self.move(0)
                             self.num_moves_e = self.num_moves_e + 1
                             self.create_rewards_e()
                         elif v <= s_weight:
+                            print("Action Down")
                             self.move(1)
                             self.num_moves_s = self.num_moves_s + 1
                             self.create_rewards_s()
                         else:
+                            print("Action Left")
                             self.num_moves_w = self.num_moves_w + 1
                             self.move(2)
                             self.create_rewards_w()
