@@ -1,10 +1,10 @@
 import pygame
 from pygame.locals import *
 from maze.game import Game
+from maze.player import Player
 
 
 class Block(pygame.sprite.Sprite):
-    # noinspection PyShadowingNames
     def __init__(self, coords, width=5, color=(0, 0, 0)):
         pygame.sprite.Sprite.__init__(self)
         self.coords = coords
@@ -19,34 +19,65 @@ class Block(pygame.sprite.Sprite):
         return self.coords
 
 
-# noinspection PyShadowingNames,PyShadowingNames,PyShadowingNames
 class Canvas:
-    def __init__(self, sprite_group,
-                 width=Game.side,
-                 height=Game.side,
-                 x=0,
-                 y=0,
-                 ):
+    def __init__(self, width=Game.side, height=Game.side, x=0, y=0, block_width=6):
         self.width = width
         self.height = height
-        self.sprite_group = sprite_group
+        self.block_width = block_width
+        self.block_group = pygame.sprite.Group()
+        self.player_group = pygame.sprite.Group()
         self.blocks = []
+        self.running = False
         self.start_point = None
         self.window = pygame.Surface((int(self.width), int(self.height)))
         self.rect = self.window.get_rect()
         self.rect.x = int(x)
         self.rect.y = int(y)
+        self.player = self.create_dummy()
+
+    def create_player(self):
+        player = Player(0, self.height/2-self.height/32, self.width, self.height, self.player_group,
+                             self.block_group, width=self.height/16, height=self.height/16, color=(0, 0, 255))
+        self.player_group.add(player)
+        return player
+
+    def update_player(self):
+        self.player.update()
+
+    def create_dummy(self):
+        player = Player(0, self.height / 2 - self.height / 32, self.width, self.height, self.player_group,
+                             self.block_group, width=self.height / 16, height=self.height / 16, color=(100, 100, 100))
+        self.player_group.add(player)
+        return player
+
+    def run(self):  # Sets running to true
+        self.start_point = None
+        self.player_group.empty()
+        self.player = self.create_player()
+        self.running = True
+
+    def stop(self):  # Sets running to false
+        self.start_point = None
+        self.player_group.empty()
+        self.player = self.create_dummy()
+        self.running = False
+
+    def is_running(self):  # Returns running
+        return self.running
 
     def clear(self):  # Clears all points
+        self.start_point = None
         self.blocks = []
-        self.sprite_group.empty()
+        self.block_group.empty()
+
     def mouse_pos(self):  # Returns altered mouse pos based on canvas location to prevent offset
         mouse_pos = pygame.mouse.get_pos()
         mouse_pos = (int(mouse_pos[0] - self.rect.x), int(mouse_pos[1] - self.rect.y))
         return mouse_pos
 
     def draw(self, window):  # Draws objects on canvas surface
-        self.sprite_group.draw(self.window)
+        self.block_group.draw(self.window)
+        self.player_group.draw(self.window)
         self.preview_line()
         window.blit(self.window, self.rect)
 
@@ -63,9 +94,9 @@ class Canvas:
         return False
 
     def point_is_valid(self, point):  # Returns if given point is on canvas
-        if 0 <= point[0] <= self.width and 0 <= point[1] <= self.height:
-            return True
-        return False
+        if not 0 <= point[0] <= self.width or not 0 <= point[1] <= self.height:
+            return False
+        return True
 
     @staticmethod
     def min_max(a, b):  # Returns the smaller and larger value of two given values
@@ -79,13 +110,16 @@ class Canvas:
 
     @staticmethod
     def line(start_point, end_point):  # Generates a list of tuples of coordinates of a line between two points
-        # Creates aliases for point coordinates
-        x1 = start_point[0]
-        x2 = end_point[0]
-        y1 = start_point[1]
-        y2 = end_point[1]
         # Initializes points in a line
         points = []
+        # Creates aliases for point coordinates
+        try:
+            x1 = start_point[0]
+            x2 = end_point[0]
+            y1 = start_point[1]
+            y2 = end_point[1]
+        except TypeError:
+            return points  # Returns no points if a point is invalid
         # Returns a single point if start point is the same as endpoint
         if start_point == end_point:
             points.append(start_point)
@@ -132,8 +166,9 @@ class Canvas:
 
     def create_block(self, point):  # Creates a Block object with given coordinates and adds it to sprite group
         if self.point_is_valid(point) and not self.block_at_pos(point):
-            block = Block(point)
+            block = Block(point, width=self.block_width*2)
             self.blocks.append(block)
-            self.sprite_group.add(block)
-            return True
+            self.block_group.add(block)
+            if self.player is not None:
+                pygame.sprite.groupcollide(self.player_group, self.block_group, False, True)
         return False
