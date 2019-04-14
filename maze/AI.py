@@ -7,7 +7,7 @@ distanceToLineW =0
 weightOfN=0.25
 weightOfE=0.25
 weightOfS=0.25
-weightofW=0.25
+weightOfW=0.25
 rewardforNorth=0
 rewardforEast=0
 rewardforSouth=0
@@ -61,8 +61,8 @@ while(numTrains < totalnumTrains+1):
     numTrains=numTrains+1
     print("Gen #"+str(numTrains))
     numbatchsize=1
-    while((numbatchsize<totalbatchsize+1) or #PlayerObject hits a big ass wall or reaches the goal):
-        numbatchsize=numbatchsize+1
+    while((numbatchsize<totalbatchsize)+1):  #PlayerObject hits a big ass wall or reaches the goal):
+        numbatchsize = numbatchsize + 1
         print("PlayerObject #"+str(numbatchsize))
         while(movementCounter<MaxNumofMovements):
             movementCounter=movementCounter+1
@@ -72,7 +72,7 @@ while(numTrains < totalnumTrains+1):
             if(typeOfAction>MovementDiff+(5*numTrains)): #Actions based on pure and utter randomness(Meant for exploration )
                 CRA=random.randint(1,4)
                 if(CRA==1):
-                    #Move N
+                    #MoveNorth
                     numMovesN=numMovesN+1
                     CreateRewardsN()
                     print("North")
