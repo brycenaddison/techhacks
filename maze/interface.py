@@ -3,7 +3,8 @@ from maze.text import Text
 from maze.game import Game
 
 
-def build(window, title, message, canvas, clicked=False, outline_width=1, running=False):
+def build(window, title, message, canvas, clicked=False, outline_width=1,
+          running=False):
     Gui.rectangle(window,
                   width=Game.side * 3 / 4 + outline_width * 2,
                   height=Game.side / 8 + outline_width,
@@ -25,7 +26,8 @@ def build(window, title, message, canvas, clicked=False, outline_width=1, runnin
                   message=message,
                   font_color=(0, 0, 0),
                   size_ratio=1/2)
-    Text.display(window, title, font_size=Game.side/16, center_y=Game.side*3/16)
+    Text.display(window, title, font_size=Game.side/16,
+                 center_y=Game.side*3/16)
     if running:
         Gui.rectangle(window,
                       width=Game.side * 5 / 32,

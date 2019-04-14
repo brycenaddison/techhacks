@@ -3,7 +3,8 @@ import pygame
 
 class Box(pygame.sprite.Sprite):
 	def __init__(
-			self, x, y, canvas_width, canvas_height, player_group, block_group, width=10, height=10,
+			self, x, y, canvas_width, canvas_height, player_group, block_group,
+			width=10, height=10,
 			color=(0, 0, 0)
 		):
 		pygame.sprite.Sprite.__init__(self)
@@ -27,7 +28,10 @@ class Player(Box):
 			self, x, y, canvas_width, canvas_height, player_group, block_group,
 			width=10, height=10, color=(0, 0, 0)
 		):
-		super().__init__(x, y, canvas_width, canvas_height, player_group, block_group, width, height, color)
+		super().__init__(
+			x, y, canvas_width, canvas_height, player_group,
+			block_group, width, height, color
+		)
 
 	def pos(self):
 		pos = (int(self.rect.x), int(self.rect.y))
@@ -70,7 +74,10 @@ class Player(Box):
 			x_dist = 0
 			y_dist = 0
 
-		if len(pygame.sprite.groupcollide(self.player_group, self.block_group, False, False)) != 0:
+		if len(pygame.sprite.groupcollide(
+				self.player_group, self.block_group,
+				False, False)
+			) != 0:
 			self.rect.x = self.rect.x - x_dist
 			self.rect.y = self.rect.y - y_dist
 			return False

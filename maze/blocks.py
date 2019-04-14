@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import *
+import pygame.locals as constant
 from maze.game import Game
 from maze.player import Player, Box
 
@@ -21,7 +21,8 @@ class Block(pygame.sprite.Sprite):
 
 
 class Canvas:
-    def __init__(self, width=Game.side, height=Game.side, x=0, y=0, block_width=3):
+    def __init__(self, width=Game.side, height=Game.side, x=0, y=0,
+                 block_width=3):
         self.width = width
         self.height = height
         self.block_width = block_width
@@ -39,8 +40,10 @@ class Canvas:
         self.goal = self.create_goal()
 
     def create_player(self):
-        player = Player(0, self.height/2-self.height/32, self.width, self.height, self.player_group,
-                        self.block_group, width=self.height/16, height=self.height/16, color=(0, 0, 255))
+        player = Player(0, self.height/2-self.height/32, self.width,
+                        self.height, self.player_group,
+                        self.block_group, width=self.height/16,
+                        height=self.height/16, color=(0, 0, 255))
         self.player_group.add(player)
         return player
 
@@ -48,15 +51,19 @@ class Canvas:
         return self.player.move(direction)
 
     def create_dummy(self):
-        player = Player(0, self.height / 2 - self.height / 32, self.width, self.height, self.player_group,
-                        self.block_group, width=self.height / 16, height=self.height / 16, color=(100, 100, 100))
+        player = Player(0, self.height / 2 - self.height / 32, self.width,
+                        self.height, self.player_group,
+                        self.block_group, width=self.height / 16,
+                        height=self.height / 16, color=(100, 100, 100))
         self.player_group.add(player)
         return player
 
     def create_goal(self):
-        goal = Box(self.width - self.height / 16 + 1, self.height / 2 - self.height / 32, self.width, self.height,
+        goal = Box(self.width - self.height / 16 + 1,
+                   self.height / 2 - self.height / 32, self.width, self.height,
                    self.player_group,
-                   self.block_group, width=self.height / 16, height=self.height / 16, color=(0, 255, 0))
+                   self.block_group, width=self.height / 16,
+                   height=self.height / 16, color=(0, 255, 0))
         self.goal_group.add(goal)
         return goal
 
@@ -100,13 +107,16 @@ class Canvas:
         self.blocks = []
         self.block_group.empty()
 
-    def mouse_pos(self):  # Returns altered mouse pos based on canvas location to prevent offset
+    def mouse_pos(self):
+        # Returns altered mouse pos based on canvas location to prevent offset
         mouse_pos = pygame.mouse.get_pos()
-        mouse_pos = (int(mouse_pos[0] - self.rect.x), int(mouse_pos[1] - self.rect.y))
+        mouse_pos = (int(mouse_pos[0] - self.rect.x),
+                     int(mouse_pos[1] - self.rect.y))
         return mouse_pos
 
     def hit_detect(self):
-        if len(pygame.sprite.groupcollide(self.player_group, self.goal_group, False, False)) != 0:
+        if len(pygame.sprite.groupcollide(self.player_group, self.goal_group,
+                                          False, False)) != 0:
             self.stop()
 
     def draw(self, window):  # Draws objects on canvas surface
@@ -122,7 +132,8 @@ class Canvas:
     def surface(self):  # Returns canvas surface
         return self.window
 
-    def block_at_pos(self, coords):  # Returns true if there is a block at a given point
+    def block_at_pos(self, coords):
+        # Returns true if there is a block at a given point
         for block in self.blocks:
             if block.get_coords == coords:
                 return True
@@ -134,7 +145,8 @@ class Canvas:
         return True
 
     @staticmethod
-    def min_max(a, b):  # Returns the smaller and larger value of two given values
+    def min_max(a, b):
+        # Returns the smaller and larger value of two given values
         if a < b:
             small = a
             large = b
@@ -144,7 +156,7 @@ class Canvas:
         return small, large
 
     @staticmethod
-    def line(start_point, end_point):  # Generates a list of tuples of coordinates of a line between two points
+    def line(start_point, end_point):  # Generates a list of points in a line
         # Initializes points in a line
         points = []
         # Creates aliases for point coordinates
@@ -159,12 +171,12 @@ class Canvas:
         if start_point == end_point:
             points.append(start_point)
             return points
-        # Avoids divide by 0 for veritcal lines, returns vertical line of points
+        # Avoids divide by 0 for veritcal lines, returns vertical line
         if x1 == x2:
             low, hi = Canvas.min_max(y1, y2)
             for y in range(low, hi):
                 points.append((x1, y))
-        # Creates line by iterating through x plane if slope is less than or equal to 1
+        # Creates line by iterating through x plane
         elif abs((y1 - y2) / (x1 - x2)) <= 1:
             def f(var):
                 return ((y1 - y2) / (x1 - x2)) * (var - x1) + y1
@@ -183,13 +195,14 @@ class Canvas:
 
     def update(self, event):
         # On mouse click, start drawing a line
-        if event.type == MOUSEBUTTONDOWN and event.button == 1:
+        if event.type == constant.MOUSEBUTTONDOWN and event.button == 1:
             self.start_point = self.mouse_pos()
         # On mouse lift, finalize line creation and create a line of points
-        elif event.type == MOUSEBUTTONUP and event.button == 1:
+        elif event.type == constant.MOUSEBUTTONUP and event.button == 1:
             start_point = self.start_point
             end_point = self.mouse_pos()
-            # Iterates through points generated by line generator and creates a Block object for each point
+            # Iterates through points generated by line generator and
+            # creates a Block object for each point
             for point in Canvas.line(start_point, end_point):
                 self.create_block(point)
             # Resets the line
@@ -197,16 +210,21 @@ class Canvas:
 
     def preview_line(self, rgb=(255, 0, 0)):
         if self.start_point is not None:
-            pygame.draw.aaline(self.window, rgb, self.start_point, self.mouse_pos())
+            pygame.draw.aaline(self.window, rgb, self.start_point,
+                               self.mouse_pos())
 
-    def create_block(self, point):  # Creates a Block object with given coordinates and adds it to sprite group
+    def create_block(self, point):
+        # Creates a Block object with given
+        # coordinates and adds it to sprite group
         if self.point_is_valid(point) and not self.block_at_pos(point):
             block = Block(point, width=self.block_width*2)
             self.blocks.append(block)
             self.block_group.add(block)
             if self.player is not None:
-                pygame.sprite.groupcollide(self.player_group, self.block_group, False, True)
+                pygame.sprite.groupcollide(self.player_group, self.block_group,
+                                           False, True)
             if self.goal is not None:
-                pygame.sprite.groupcollide(self.goal_group, self.block_group, False, True)
+                pygame.sprite.groupcollide(self.goal_group, self.block_group,
+                                           False, True)
 
         return False
